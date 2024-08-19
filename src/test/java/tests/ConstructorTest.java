@@ -2,7 +2,6 @@ package tests;
 
 import apiclient.UserService;
 import io.qameta.allure.Description;
-import io.qameta.allure.Step;
 import io.qameta.allure.junit4.DisplayName;
 import io.restassured.RestAssured;
 import io.restassured.filter.log.RequestLoggingFilter;
@@ -26,20 +25,17 @@ public class ConstructorTest {
     private static final String pageUrl = "https://stellarburgers.nomoreparties.site/";
 
     @BeforeClass
-    @Step("Глобальная настройка тестов")
     public static void globalSetUp() {
         RestAssured.filters(new RequestLoggingFilter(), new ResponseLoggingFilter());
     }
 
     @Before
-    @Step("Подготовка данных для теста")
     public void setUp() {
         driver = createWebDriver();
         userService = new UserService();
     }
 
     @Test
-    @Step("Переход к разделу Булки")
     @DisplayName("Тест перехода к разделу Булки")
     @Description("Проверка, что можно перейти к разделу Булки")
     public void bunTabTest() {
@@ -57,7 +53,6 @@ public class ConstructorTest {
     }
 
     @Test
-    @Step("Переход к разделу Соусы")
     @DisplayName("Тест перехода к разделу Соусы")
     @Description("Проверка, что можно перейти к разделу Соусы")
     public void sauceTabTest() {
@@ -75,7 +70,6 @@ public class ConstructorTest {
     }
 
     @Test
-    @Step("Переход к разделу Начинки")
     @DisplayName("Тест перехода к разделу Начинки")
     @Description("Проверка, что можно перейти к разделу Начинки")
     public void fillingTabTest() {
@@ -92,10 +86,11 @@ public class ConstructorTest {
         assertTrue(isFillingElementActual);
     }
 
-    @Step("Очистка данных и завершение работы браузера после теста")
     @After
     public void tearDownAndClearData() {
         driver.quit();
-        userService.delete(token);
+        if (token != null) {
+            userService.delete(token);
+        }
     }
 }

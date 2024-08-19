@@ -2,7 +2,6 @@ package tests;
 
 import apiclient.UserService;
 import io.qameta.allure.Description;
-import io.qameta.allure.Step;
 import io.qameta.allure.junit4.DisplayName;
 import io.restassured.RestAssured;
 import io.restassured.filter.log.RequestLoggingFilter;
@@ -25,20 +24,17 @@ public class RegistrationPageTest {
     private static final String pageUrl = "https://stellarburgers.nomoreparties.site/";
 
     @BeforeClass
-    @Step("Глобальная настройка тестов")
     public static void globalSetUp() {
         RestAssured.filters(new RequestLoggingFilter(), new ResponseLoggingFilter());
     }
 
     @Before
-    @Step("Подготовка данных для теста")
     public void setUp() {
         driver = createWebDriver();
         userService = new UserService();
     }
 
     @Test
-    @Step("Успешная регистрация")
     @DisplayName("Тест успешной регистрации")
     @Description("Тест проверяет, что пользователь может успешно зарегистрироваться при вводе корректных и уникальных данных")
     public void successfulRegistrationTest() {
@@ -54,7 +50,6 @@ public class RegistrationPageTest {
         assertEquals(expectedText, actualText);
     }
     @Test
-    @Step("Неуспешная регистрация")
     @DisplayName("Тест неуспешной регистрации при вводе пароля длиной меньше 6 символов")
     @Description("Тест проверяет, что пользователь не сможет успешно зарегистрироваться при вводе пароля длиной меньше 6 символов")
     public void incorrectPasswordMessageTest() {
@@ -68,10 +63,11 @@ public class RegistrationPageTest {
         assertEquals(expectedMessage, actualMessage);
     }
 
-    @Step("Очистка данных и завершение работы браузера после теста")
     @After
     public void tearDownAndClearData() {
         driver.quit();
-        userService.delete(token);
+        if (token != null) {
+            userService.delete(token);
+        }
     }
 }

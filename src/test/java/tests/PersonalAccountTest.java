@@ -2,7 +2,6 @@ package tests;
 
 import apiclient.UserService;
 import io.qameta.allure.Description;
-import io.qameta.allure.Step;
 import io.qameta.allure.junit4.DisplayName;
 import io.restassured.RestAssured;
 import io.restassured.filter.log.RequestLoggingFilter;
@@ -26,20 +25,17 @@ public class PersonalAccountTest {
     private static final String pageUrl = "https://stellarburgers.nomoreparties.site/";
 
     @BeforeClass
-    @Step("Глобальная настройка тестов")
     public static void globalSetUp() {
         RestAssured.filters(new RequestLoggingFilter(), new ResponseLoggingFilter());
     }
 
     @Before
-    @Step("Подготовка данных для теста")
     public void setUp() {
         driver = createWebDriver();
         userService = new UserService();
     }
 
     @Test
-    @Step("Переход в личный кабинет")
     @DisplayName("Тест перехода в личный кабинет по клику на «Личный кабинет»")
     @Description("Тест проверяет, что пользователь может успешно перейти в личный кабинет по клику на «Личный кабинет»")
     public void PersonalAccountPageSwitchTest() {
@@ -57,10 +53,11 @@ public class PersonalAccountTest {
         assertEquals(expectedPersonalAccountText, actualPersonalAccountText);
     }
 
-    @Step("Очистка данных и завершение работы браузера после теста")
     @After
     public void tearDownAndClearData() {
         driver.quit();
-        userService.delete(token);
+        if (token != null) {
+            userService.delete(token);
+        }
     }
 }

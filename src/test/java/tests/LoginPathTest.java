@@ -2,7 +2,6 @@ package tests;
 
 import apiclient.UserService;
 import io.qameta.allure.Description;
-import io.qameta.allure.Step;
 import io.qameta.allure.junit4.DisplayName;
 import io.restassured.RestAssured;
 import io.restassured.filter.log.RequestLoggingFilter;
@@ -36,13 +35,11 @@ public class LoginPathTest {
     private static final String pageUrl = "https://stellarburgers.nomoreparties.site/";
 
     @BeforeClass
-    @Step("Глобальная настройка тестов")
     public static void globalSetUp() {
         RestAssured.filters(new RequestLoggingFilter(), new ResponseLoggingFilter());
     }
 
     @Before
-    @Step("Подготовка данных для теста")
     public void setUp() {
         driver = createWebDriver();
         userService = new UserService();
@@ -59,7 +56,6 @@ public class LoginPathTest {
     }
 
     @Test
-    @Step("Вход в аккаунт различными способами")
     @DisplayName("Тест входа в аккаунт через различные кнопки")
     @Description("Тест проверяет, что пользователь может успешно войти в систему, используя различные пути.")
     public void logIntoAccountTest() {
@@ -80,10 +76,11 @@ public class LoginPathTest {
         assertEquals(expectedButtonForAuthorizedUser, actualButtonForAuthorizedUser);
     }
 
-    @Step("Очистка данных и завершение работы браузера после теста")
     @After
     public void tearDownAndClearData() {
         driver.quit();
-        userService.delete(token);
+        if (token != null) {
+            userService.delete(token);
+        }
     }
 }
